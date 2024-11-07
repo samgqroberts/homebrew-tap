@@ -1,17 +1,57 @@
 class Merchant < Formula
-  desc "Terminal UI game"
+  desc "A terminal UI game."
   homepage "https://github.com/samgqroberts/merchant"
-  on_arm do
-    url "https://github.com/samgqroberts/merchant/releases/download/v0.2.0/merchant-0.2.0-aarch64-apple-darwin.tar.gz"
-    sha256 "e1d80ee8a84c4343d1df3eb9e8ff7801651b50cf3790326cd30172e69ce6287d"
+  version "0.4.4"
+  if OS.mac?
+    if Hardware::CPU.arm?
+      url "https://github.com/samgqroberts/merchant/releases/download/v0.4.4/merchant-aarch64-apple-darwin.tar.xz"
+      sha256 "b6322296f45a337e92170585d20d6c1e3f17cecd79637bfc18f9372ac3b27786"
+    end
+    if Hardware::CPU.intel?
+      url "https://github.com/samgqroberts/merchant/releases/download/v0.4.4/merchant-x86_64-apple-darwin.tar.xz"
+      sha256 "eda18eb9e6f41cd770c33d306efcad3a0d21f1f4ba59419020fdf5ae6f8229e5"
+    end
   end
-  on_intel do
-    url  "https://github.com/samgqroberts/merchant/releases/download/v0.2.0/merchant-0.2.0-x86_64-apple-darwin.tar.gz"
-    sha256 "b797840894cf41d0038ffe9410a7ee46ce069bd49c891f4f9661b663a3b24406"
+  if OS.linux? && Hardware::CPU.intel?
+    url "https://github.com/samgqroberts/merchant/releases/download/v0.4.4/merchant-x86_64-unknown-linux-gnu.tar.xz"
+    sha256 "d5895120a039c5c8d5efe2115ffd2fa798334e5ca98e0b0cbabebe8c039042f5"
   end
-  version "0.2.0"
+
+  BINARY_ALIASES = {
+    "aarch64-apple-darwin":     {},
+    "x86_64-apple-darwin":      {},
+    "x86_64-pc-windows-gnu":    {},
+    "x86_64-unknown-linux-gnu": {},
+  }.freeze
+
+  def target_triple
+    cpu = Hardware::CPU.arm? ? "aarch64" : "x86_64"
+    os = OS.mac? ? "apple-darwin" : "unknown-linux-gnu"
+
+    "#{cpu}-#{os}"
+  end
+
+  def install_binary_aliases!
+    BINARY_ALIASES[target_triple.to_sym].each do |source, dests|
+      dests.each do |dest|
+        bin.install_symlink bin/source.to_s => dest
+      end
+    end
+  end
 
   def install
-    bin.install "merchant"
+    bin.install "merchant" if OS.mac? && Hardware::CPU.arm?
+    bin.install "merchant" if OS.mac? && Hardware::CPU.intel?
+    bin.install "merchant" if OS.linux? && Hardware::CPU.intel?
+
+    install_binary_aliases!
+
+    # Homebrew will automatically install these, so we don't need to do that
+    doc_files = Dir["README.*", "readme.*", "LICENSE", "LICENSE.*", "CHANGELOG.*"]
+    leftover_contents = Dir["*"] - doc_files
+
+    # Install any leftover files in pkgshare; these are probably config or
+    # sample files.
+    pkgshare.install(*leftover_contents) unless leftover_contents.empty?
   end
 end
