@@ -1,20 +1,20 @@
 class Merchant < Formula
   desc "A terminal UI game."
   homepage "https://github.com/samgqroberts/merchant"
-  version "0.5.0"
+  version "1.0.3"
   if OS.mac?
     if Hardware::CPU.arm?
-      url "https://github.com/samgqroberts/merchant/releases/download/v0.5.0/merchant-aarch64-apple-darwin.tar.xz"
-      sha256 "1b4f1ee9eb75b42d55662f74f48ac93c1d682268ad28dd6f5180ad0b95901f6e"
+      url "https://github.com/samgqroberts/merchant/releases/download/v1.0.3/merchant-aarch64-apple-darwin.tar.xz"
+      sha256 "8abe26f46f80ae3c8dd5bb73414b5be27027f2ae42bdb43eb23881e28ee6ba3f"
     end
     if Hardware::CPU.intel?
-      url "https://github.com/samgqroberts/merchant/releases/download/v0.5.0/merchant-x86_64-apple-darwin.tar.xz"
-      sha256 "b1398d59805d7bc0a200621aa19583e92050a0d501dd269dbecd4c3545584842"
+      url "https://github.com/samgqroberts/merchant/releases/download/v1.0.3/merchant-x86_64-apple-darwin.tar.xz"
+      sha256 "f064fa1052ecfef2e6ffd9ab87bb532e3cd3ef8243cf127e033cbd7d3ba1e21a"
     end
   end
   if OS.linux? && Hardware::CPU.intel?
-    url "https://github.com/samgqroberts/merchant/releases/download/v0.5.0/merchant-x86_64-unknown-linux-gnu.tar.xz"
-    sha256 "5dfbbd5e83f676b0dde13b3598fdde181778dce08184c10e4470af49a7425fa0"
+    url "https://github.com/samgqroberts/merchant/releases/download/v1.0.3/merchant-x86_64-unknown-linux-gnu.tar.xz"
+    sha256 "2a2a9bc6b7359c28ec2f8a506626d1a449feefc6c607aa10ef1eae4ced3b7cb5"
   end
 
   BINARY_ALIASES = {
